@@ -2,9 +2,12 @@
 import express from "express";
 import postgres from "postgres";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
+// import path from "path";
 
-// Load environment variables from .env file
-dotenv.config();
+// Load environment variables from .env file in the config folder
+// Load environment variables from .env file in the config folder
+dotenv.config({ path: "./config/.env" });
 
 // Extract environment variables
 const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
@@ -24,6 +27,8 @@ const sql = postgres({
 
 // Create an Express app instance
 const app = express();
+app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Define a route to get PostgreSQL version
 app.get("/pg_version", async (req, res) => {
@@ -56,7 +61,8 @@ app.get("/accounts", async (req, res) => {
 
 // Define a default route
 app.get("/", (req, res) => {
-  res.send("Welcome to my Express.js app!");
+  // res.send("Welcome to my Express.js app!");
+  res.render("index.ejs");
 });
 
 // Start the server
