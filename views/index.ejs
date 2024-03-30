@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Intake Dashboard</title>
+</head>
+<body>
+    <h1>College Intake Dashboard</h1>
+    
+    <form>
+        <label for="college">Select College:</label>
+        <select id="college" name="college">
+            <option value="vit">VIT</option>
+            <option value="viit">VIIT</option>
+            <option value="vu">VU</option>
+        </select>
+        <br><br>
+        
+        <label for="branch">Select Branch:</label>
+        <select id="branch" name="branch">
+            <option value="cs">Computer Science (CS)</option>
+            <option value="it">Information Technology (IT)</option>
+            <option value="entc">Electronics and Telecommunication (ENTC)</option>
+            <option value="civil">Civil Engineering</option>
+            <option value="mech">Mechanical Engineering</option>
+        </select>
+        <br><br>
+        
+        <label for="intake">Intake:</label>
+        <select id="intake" name="intake">
+            <option value="60">60</option>
+            <option value="180">180</option>
+            <option value="240">240</option>
+            <!-- Add more options if needed -->
+        </select>
+        <br><br>
+        
+        <label for="seat-type">Seat Type:</label>
+        <select id="seat-type" name="seat-type">
+            <option value="nri">NRI</option>
+            <option value="general">General</option>
+            <!-- Add more options if needed -->
+        </select>
+        <br><br>
+        
+        <button onclick="redirectToDashboard()">Add</button>
+    </form>
+
+    <script>
+        function addEntry() {
+            // Fetch selected values
+            var college = document.getElementById("college").value;
+            var branch = document.getElementById("branch").value;
+            var intake = document.getElementById("intake").value;
+            var seatType = document.getElementById("seat-type").value;
+
+            // Create a new entry or do something with the values
+            console.log("College: " + college);
+            console.log("Branch: " + branch);
+            console.log("Intake: " + intake);
+            console.log("Seat Type: " + seatType);
+
+            // Here you can send the values to backend or do other operations as per your requirement
+        }
+    
+        function redirectToDashboard() {
+            window.location.href = '/dashboard';
+        }
+    </script>
+</body>
+</html>

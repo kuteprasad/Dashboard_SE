@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Dashboard - Seat Availability</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th>Seats</th>
+            </tr>
+        </thead>
+        <tbody id="dashboardData">
+            <!-- Seat availability data will be inserted here -->
+        </tbody>
+    </table>
+
+    <form id="allocationForm">
+        <!-- Your form fields for adding new seat allocations -->
+        <button type="submit">Add Allocation</button>
+    </form>
+
+    <script>
+        window.onload = async function() {
+            const response = await fetch('/dashboard');
+            const data = await response.json();
+            const dashboardDataElement = document.getElementById('dashboardData');
+            data.forEach(entry => {
+                const row = document.createElement('tr');
+                const departmentCell = document.createElement('td');
+                departmentCell.textContent = entry.department;
+                const seatsCell = document.createElement('td');
+                seatsCell.textContent = `NRI: ${entry.seats.nri}, General: ${entry.seats.general}`;
+                row.appendChild(departmentCell);
+                row.appendChild(seatsCell);
+                dashboardDataElement.appendChild(row);
+            });
+        };
+
+        // Function to handle form submission
+        document.getElementById('allocationForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(this); // Get form data
+            const data = {}; // Convert form data to JSON object
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Send POST request to server
+            try {
+                const response = await fetch('/allocate-seats', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const responseData = await response.json();
+                alert(responseData.message); // Display success message
+            } catch (error) {
+                console.error(error);
+                alert('Error occurred while adding allocation'); // Display error message
+            }
+        });
+    </script>
+</body>
+</html>
