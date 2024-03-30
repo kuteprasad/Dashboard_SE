@@ -8,10 +8,11 @@ CREATE TABLE IF NOT EXISTS seat_data (
     vacant INTEGER NOT NULL
 );
 
-
 INSERT INTO seat_data (college, branch, seat_type, intake, filled, vacant)
 VALUES
     ('VU', 'Computer Science', 'NRI', 50, 30, 20),
     ('VU', 'Electrical Engineering', 'OCI', 40, 20, 20),
     ('VU', 'Mechanical Engineering', 'FN', 60, 45, 15);
+
+
 

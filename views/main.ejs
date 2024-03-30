@@ -8,9 +8,10 @@
   <body>
     <h1>College Intake Dashboard</h1>
 
-    <form>
+    <form action="/view_data" method="post">
       <label for="college">Select College:</label>
       <select id="college" name="college">
+        <option value="all">All</option>
         <option value="vit">VIT</option>
         <option value="viit">VIIT</option>
         <option value="vu">VU</option>
@@ -19,7 +20,8 @@
 
       <label for="branch">Select Branch:</label>
       <select id="branch" name="branch">
-        <option value="cs">Computer Science (CS)</option>
+        <option value="all">All</option>
+        <option value="cs">Computer Science(CS)</option>
         <option value="it">Information Technology (IT)</option>
         <option value="entc">Electronics and Telecommunication (ENTC)</option>
         <option value="civil">Civil Engineering</option>
@@ -27,46 +29,48 @@
       </select>
       <br /><br />
 
-      <label for="intake">Intake:</label>
-      <select id="intake" name="intake">
-        <option value="60">60</option>
-        <option value="180">180</option>
-        <option value="240">240</option>
+      <label for="seat_type">Seat Type:</label>
+      <select id="seat_type" name="seat_type">
+        <option value="NRI">NRI</option>
+        <option value="OCI">OCI</option>
+        <option value="FN">FN</option>
+        <option value="PIO">PIO</option>
+        <option value="CIWGC">CIWGC</option>
+
         <!-- Add more options if needed -->
       </select>
       <br /><br />
 
-      <label for="seat-type">Seat Type:</label>
-      <select id="seat-type" name="seat-type">
-        <option value="nri">NRI</option>
-        <option value="general">General</option>
-        <!-- Add more options if needed -->
-      </select>
-      <br /><br />
-
-      <button onclick="redirectToDashboard()">Add</button>
+      <button type="submit">View Available Seats</button>
     </form>
 
-    <script>
-      function addEntry() {
-        // Fetch selected values
-        var college = document.getElementById("college").value;
-        var branch = document.getElementById("branch").value;
-        var intake = document.getElementById("intake").value;
-        var seatType = document.getElementById("seat-type").value;
-
-        // Create a new entry or do something with the values
-        console.log("College: " + college);
-        console.log("Branch: " + branch);
-        console.log("Intake: " + intake);
-        console.log("Seat Type: " + seatType);
-
-        // Here you can send the values to backend or do other operations as per your requirement
-      }
-
-      function redirectToDashboard() {
-        window.location.href = "/dashboard";
-      }
-    </script>
+    <% if ( typeof data !== 'undefined' && data.local) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>College</th>
+          <th>Branch</th>
+          <th>Seat Type</th>
+          <th>Intake</th>
+          <th>Filled</th>
+          <th>Vacant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% data.local.forEach(function(row) { %>
+        <tr>
+          <td><%= row.id %></td>
+          <td><%= row.college %></td>
+          <td><%= row.branch %></td>
+          <td><%= row.seat_type %></td>
+          <td><%= row.intake %></td>
+          <td><%= row.filled %></td>
+          <td><%= row.vacant %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %>
   </body>
 </html>

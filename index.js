@@ -28,9 +28,39 @@ app.get("/pg_version", async (req, res) => {
 
 app.get("/view_data", async (req, res) => {
   try {
-    const data = await sql`SELECT * FROM seat_data`;
+    // const data = await sql`SELECT * FROM seat_data`;
+    res.render("main.ejs");
+  } catch (error) {
+    console.log(error);
+    res.send("error occured : ", error);
+  }
+});
 
-    res.json(data);
+app.post("/view_data", async (req, res) => {
+  try {
+    // Capture the selected options from the form
+    const { college, branch, seat_type } = req.body;
+
+    // Construct the SQL query based on the selected options
+    let sqlQuery = "SELECT * FROM seat_data WHERE 1 = 1"; // Initial condition
+
+    if (college !== "all") {
+      sqlQuery += ` AND college = '${college}'`;
+    }
+
+    if (branch !== "all") {
+      sqlQuery += ` AND branch = '${branch}'`;
+    }
+
+    if (seat_type !== "all") {
+      sqlQuery += ` AND seat_type = '${seat_type}'`;
+    }
+
+    // Query the database
+    const result = await sql`${sqlQuery}`;
+    console.log(result);
+
+    res.render("main.ejs", { data: result });
   } catch (error) {
     console.log(error);
     res.send("error occured : ", error);
