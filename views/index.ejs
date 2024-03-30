@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--
+  
+  <<<<<<< HEAD
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +35,7 @@
             <option value="60">60</option>
             <option value="180">180</option>
             <option value="240">240</option>
-            <!-- Add more options if needed -->
+            
         </select>
         <br><br>
         
@@ -40,7 +43,7 @@
         <select id="seat-type" name="seat-type">
             <option value="nri">NRI</option>
             <option value="general">General</option>
-            <!-- Add more options if needed -->
+            
         </select>
         <br><br>
         
@@ -69,4 +72,23 @@
         }
     </script>
 </body>
+======= -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/styles/main.css" />
+  </head>
+  <body>
+    <div class="centered-box">
+      <form action="/accounts" method="get">
+        <button type="submit">Accounts details</button>
+      </form>
+
+      <form action="/pg_version" method="get">
+        <button type="submit">PG Version</button>
+      </form>
+    </div>
+  </body>
+
 </html>

@@ -1,0 +1,7 @@
+.centered-box {
+  display: flex;
+  flex: column nowrap;
+  justify-content: center;
+  align-items: center;
+  border: 1rem solid tomato;
+}
