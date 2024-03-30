@@ -109,6 +109,9 @@ const app = express();
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Set EJS as the view engine
+app.set("view engine", "ejs");
+
 // Define a route to get PostgreSQL version
 app.get("/pg_version", async (req, res) => {
   try {
@@ -123,17 +126,38 @@ app.get("/pg_version", async (req, res) => {
   }
 });
 
-// Define a route to fetch data from the accounts table
-app.get("/accounts", async (req, res) => {
+app.get("/view_data", async (req, res) => {
   try {
-    // Execute a SQL query to select data from the accounts table
-    const accounts = await sql`SELECT * FROM accounts`;
+    const data = await sql`SELECT * FROM seat_data`;
 
-    // Send the retrieved data as a JSON response
-    res.json(accounts);
+    res.json(data);
   } catch (error) {
-    console.error("Error fetching accounts:", error);
-    // Send an error response if there's an issue with the database query
+    console.log(error);
+    res.send("error occured : ", error);
+  }
+});
+
+// Route to fetch data for the dashboard
+app.get("/dashboard", async (req, res) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query(
+      "SELECT college, branch, SUM(intake) as total_intake, SUM(filled) as total_filled FROM seat_allocations GROUP BY college, branch"
+    );
+    const dashboardData = result.rows.map((row) => {
+      const remainingSeats = row.total_intake - row.total_filled;
+      return {
+        department: row.branch,
+        seats: {
+          nri: remainingSeats, // Assuming remaining seats are available for NRI quota
+          general: 0, // You may need to calculate this based on your logic
+        },
+      };
+    });
+    client.release();
+    res.json(dashboardData);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
