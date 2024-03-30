@@ -19,7 +19,9 @@
   "homepage": "https://github.com/Tejaswini-41/Dashboard_SE#readme",
   "dependencies": {
     "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "postgres": "^3.4.4"
   }
 }
