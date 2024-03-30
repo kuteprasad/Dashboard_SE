@@ -1,32 +1,11 @@
 // Import required packages
 import express from "express";
-import postgres from "postgres";
-import dotenv from "dotenv";
 import bodyParser from "body-parser";
-// import path from "path";
-
-// Load environment variables from .env file in the config folder
-// Load environment variables from .env file in the config folder
-dotenv.config({ path: "./config/.env" });
-
-// Extract environment variables
-const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
-
-// Create a PostgreSQL client instance
-const sql = postgres({
-  host: PGHOST,
-  database: PGDATABASE,
-  username: PGUSER,
-  password: PGPASSWORD,
-  port: 5432,
-  ssl: "require",
-  connection: {
-    options: `project=${ENDPOINT_ID}`,
-  },
-});
+import { sql } from "./routes/db.js"; // Import sql from db.js
 
 // Create an Express app instance
 const app = express();
+
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
