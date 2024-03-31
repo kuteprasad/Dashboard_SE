@@ -185,9 +185,98 @@ app.post("/view_data", async (req, res) => {
 app.get("/add_student", (req, res) => {
   res.render("add_student.ejs");
 });
-app.post("/add_student", (req, res) => {
-  // post logic
-  res.send("/add_student post method called");
+
+app.post("/add_student", async (req, res) => {
+  // res.send("working");
+  try {
+    // Extract form data from request body
+    const {
+      first_name,
+      last_name,
+      mobile,
+      email,
+      enrolment_no,
+      seat_type,
+      candidate_type,
+      college,
+      branch,
+      fee_status,
+      doa,
+    } = req.body;
+
+    // Execute SQL INSERT statement
+    const query = `
+      INSERT INTO student_details (first_name, last_name, mobile, email, enrolment_no, seat_type, candidate_type, college, branch, fee_status, doa)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    `;
+    const values = [
+      first_name,
+      last_name,
+      mobile,
+      email,
+      enrolment_no,
+      seat_type,
+      candidate_type,
+      college,
+      branch,
+      fee_status,
+      doa,
+    ];
+    await db.query(query, values);
+
+    const htmlResponse = `
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Added</title>
+</head>
+<body>
+    <script>
+        // Display alert when the page is loaded
+        alert("Data added Successfully!");
+
+        // Redirect to home route after a short delay
+        setTimeout(function() {
+            window.location.href = '/';
+        }, 0);
+    </script>
+    </body>
+</html>
+
+        `;
+    res.status(200).send(htmlResponse);
+  } catch (error) {
+    if (error.code == "23505") {
+      const htmlResponse = `
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+</head>
+<body>
+    <script>
+        // Display alert when the page is loaded
+        alert("Data already exists.");
+
+        // Redirect to home route after a short delay
+        setTimeout(function() {
+            window.location.href = '/';
+        }, 0);
+    </script>
+    </body>
+</html>
+        `;
+      res.status(400).send(htmlResponse);
+    } else {
+      // Handle other errors
+      console.error("Error adding student data:", error);
+      res.status(500).send("An error occurred while adding student data.");
+    }
+  }
 });
 
 // Define a default route
