@@ -87,29 +87,64 @@ app.get("/add_student", (req, res) => {
 });
 
 app.post("/add_student", async (req, res) => {
-  // res.send("working");
-  try {
-    // Extract form data from request body
-    const {
-      first_name,
-      last_name,
-      mobile,
-      email,
-      enrolment_no,
-      seat_type,
-      candidate_type,
-      college,
-      branch,
-      fee_status,
-      doa,
-    } = req.body;
+  // Extract form data from request body
+  const {
+    first_name,
+    last_name,
+    mobile,
+    email,
+    enrolment_no,
+    seat_type,
+    candidate_type,
+    college,
+    branch,
+    fee_status,
+    doa,
+  } = req.body;
 
-    // Execute SQL INSERT statement
-    const query = `
+  try {
+    // Start a transaction
+    await db.query("BEGIN");
+
+    // Execute the first SQL statement to update seat_data
+    const updateQuery = `
+      UPDATE seat_data
+      SET filled = filled + 1, vacant = vacant - 1
+      WHERE college = $1
+        AND branch = $2
+        AND seat_type = $3
+        AND vacant > 0
+        RETURNING *;
+    `;
+    const updateValues = [college, branch, seat_type];
+    const updateResult = await db.query(updateQuery, updateValues);
+
+    // Check if any rows were affected by the UPDATE
+    if (updateResult.rowCount === 0) {
+      // No vacant seats available, so rollback the transaction
+      await db.query("ROLLBACK");
+      const htmlResponse = `
+      
+          <script>
+              // Display alert when the page is loaded
+              alert("No vacant seats available...");
+
+              // Redirect to home route after a short delay
+              setTimeout(function() {
+                  window.location.href = '/';
+              }, 0);
+          </script>
+      
+    `;
+      res.status(404).send(htmlResponse);
+    }
+
+    // Execute the second SQL statement to insert into student_details
+    const insertQuery = `
       INSERT INTO student_details (first_name, last_name, mobile, email, enrolment_no, seat_type, candidate_type, college, branch, fee_status, doa)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     `;
-    const values = [
+    const insertValues = [
       first_name,
       last_name,
       mobile,
@@ -122,59 +157,61 @@ app.post("/add_student", async (req, res) => {
       fee_status,
       doa,
     ];
-    await db.query(query, values);
+    await db.query(insertQuery, insertValues);
+
+    // If both SQL statements executed successfully, commit the transaction
+    await db.query("COMMIT");
+
+    // Send success response
 
     const htmlResponse = `
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Added</title>
-</head>
-<body>
-    <script>
-        // Display alert when the page is loaded
-        alert("Data added Successfully!");
+          <script>
+              // Display alert when the page is loaded
+              alert("Data added Successfully!");
 
-        // Redirect to home route after a short delay
-        setTimeout(function() {
-            window.location.href = '/';
-        }, 0);
-    </script>
-    </body>
-</html>
-
-        `;
+              // Redirect to home route after a short delay
+              setTimeout(function() {
+                  window.location.href = '/';
+              }, 0);
+          </script>
+    `;
     res.status(200).send(htmlResponse);
   } catch (error) {
-    if (error.code == "23505") {
-      const htmlResponse = `
-      <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error</title>
-</head>
-<body>
-    <script>
-        // Display alert when the page is loaded
-        alert("Data already exists.");
+    // If an error occurred, rollback the transaction
+    await db.query("ROLLBACK");
 
-        // Redirect to home route after a short delay
-        setTimeout(function() {
-            window.location.href = '/';
-        }, 0);
-    </script>
-    </body>
-</html>
-        `;
+    // Handle the error
+    if (error.code === "23505") {
+      // Data already exists error
+      const htmlResponse = `
+        
+            <script>
+                // Display alert when the page is loaded
+                alert("Data already exists.");
+
+                // Redirect to home route after a short delay
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 0);
+            </script>
+      
+      `;
       res.status(400).send(htmlResponse);
     } else {
-      // Handle other errors
+      // Other errors
       console.error("Error adding student data:", error);
-      res.status(500).send("An error occurred while adding student data.");
+      const htmlResponse = `
+            <script>
+                // Display alert when the page is loaded
+                alert("An error occurred while adding student data.");
+
+                // Redirect to home route after a short delay
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 0);
+            </script>
+      `;
+      res.status(500).send(htmlResponse);
     }
   }
 });
