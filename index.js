@@ -1,7 +1,8 @@
 // Import required packages
 import express from "express";
 import bodyParser from "body-parser";
-import { sql } from "./routes/db.js"; // Import sql from db.js
+
+import { db } from "./routes/db.js"; // Import sql from db.js
 
 // Create an Express app instance
 const app = express();
@@ -12,13 +13,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Set EJS as the view engine
 app.set("view engine", "ejs");
 
-// Define a route to get PostgreSQL version
 app.get("/pg_version", async (req, res) => {
   try {
     // Fetch PostgreSQL version
-    const result = await sql`select version()`;
+    const result = await db.query("select version()");
+
+    // Check if result is empty or undefined
+    if (!result || result.rows.length === 0) {
+      throw new Error("PostgreSQL version not found");
+    }
+
     // Send response with PostgreSQL version
-    res.json({ version: result[0].version });
+    res.render("version.ejs", { versionInfo: result.rows[0].version });
   } catch (error) {
     console.error("Error fetching PostgreSQL version:", error);
     // Send error response
@@ -28,8 +34,10 @@ app.get("/pg_version", async (req, res) => {
 
 app.get("/view_data", async (req, res) => {
   try {
-    // const data = await sql`SELECT * FROM seat_data`;
-    res.render("main.ejs");
+    const data = {
+      local: false,
+    };
+    res.render("main.ejs", { data });
   } catch (error) {
     console.log(error);
     res.send("error occured : ", error);
@@ -56,14 +64,21 @@ app.post("/view_data", async (req, res) => {
       sqlQuery += ` AND seat_type = '${seat_type}'`;
     }
 
-    // Query the database
-    const result = await sql`${sqlQuery}`;
-    console.log(result);
+    // Replace the following line with your method of executing SQL queries
+    // Execute the query using the sql method
+    const result = await db.query(sqlQuery);
+    // console.log(result.rows);
 
-    res.render("main.ejs", { data: result });
+    const data = {
+      local: true,
+      response: result.rows,
+    };
+
+    res.render("main.ejs", { data: data });
   } catch (error) {
+    const status = error.status || 500;
     console.log(error);
-    res.send("error occured : ", error);
+    res.status(status).send(error);
   }
 });
 

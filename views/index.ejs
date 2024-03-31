@@ -1,20 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="/styles/main.css" />
-  </head>
+  <%- include("partials/head.ejs") %>
   <body>
-    <div class="centered-box">
-      <form action="/pg_version" method="get">
-        <button type="submit">PG Version</button>
-      </form>
+    <%- include("partials/header.ejs") %>
 
-      <form action="/view_data" method="get">
-        <button type="submit">Show Data</button>
-      </form>
+    <div class="row">
+      <div class="col-sm-6 mb-3 mb-sm-0">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Check PostgreSQL Version</h5>
+            <p class="card-text">
+              This form allows you to check the version of PostgreSQL installed
+              on your system.
+            </p>
+            <a href="/pg_version" class="btn btn-dark">PG Version</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Show Data</h5>
+            <p class="card-text">
+              This form allows you to view data from the database.
+            </p>
+            <a href="/view_data" class="btn btn-success">View Data</a>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <%- include("partials/footer.ejs") %>
   </body>
 </html>
