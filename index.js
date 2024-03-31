@@ -1,5 +1,5 @@
 // Import required packages
-import express from "express";
+import express, { query } from "express";
 import bodyParser from "body-parser";
 
 import { db } from "./routes/db.js"; // Import sql from db.js
@@ -215,6 +215,49 @@ app.post("/add_student", async (req, res) => {
     }
   }
 });
+
+app.get("/report", async (req, res) => {
+  try {
+    const query = `SELECT 
+    college,
+    branch,
+    SUM(CASE WHEN seat_type = 'NRI' THEN intake ELSE 0 END) AS nri_intake,
+    SUM(CASE WHEN seat_type = 'NRI' THEN filled ELSE 0 END) AS nri_filled,
+    SUM(CASE WHEN seat_type = 'NRI' THEN vacant ELSE 0 END) AS nri_vacant,
+    SUM(CASE WHEN seat_type = 'OCI' THEN intake ELSE 0 END) AS oci_intake,
+    SUM(CASE WHEN seat_type = 'OCI' THEN filled ELSE 0 END) AS oci_filled,
+    SUM(CASE WHEN seat_type = 'OCI' THEN vacant ELSE 0 END) AS oci_vacant,
+    SUM(CASE WHEN seat_type = 'FN' THEN intake ELSE 0 END) AS fn_intake,
+    SUM(CASE WHEN seat_type = 'FN' THEN filled ELSE 0 END) AS fn_filled,
+    SUM(CASE WHEN seat_type = 'FN' THEN vacant ELSE 0 END) AS fn_vacant,
+    SUM(CASE WHEN seat_type = 'PIO' THEN intake ELSE 0 END) AS pio_intake,
+    SUM(CASE WHEN seat_type = 'PIO' THEN filled ELSE 0 END) AS pio_filled,
+    SUM(CASE WHEN seat_type = 'PIO' THEN vacant ELSE 0 END) AS pio_vacant,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN intake ELSE 0 END) AS ciwgc_intake,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN filled ELSE 0 END) AS ciwgc_filled,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN vacant ELSE 0 END) AS ciwgc_vacant,
+    SUM(intake) AS total_intake,
+    SUM(filled) AS total_filled,
+    SUM(vacant) AS total_vacant
+FROM 
+    seat_data
+GROUP BY 
+    college, branch
+ORDER BY 
+    college ASC, branch ASC; `;
+
+    const response = await db.query(query);
+    // console.log(response.rows);
+
+    res.render("report.ejs", {
+      collegeData: response.rows,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/report", (req, res) => {});
 
 // Define a default route
 app.get("/", (req, res) => {
