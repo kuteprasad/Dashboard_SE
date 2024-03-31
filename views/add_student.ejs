@@ -3,79 +3,197 @@
   <%- include("partials/head.ejs") %>
   <body>
     <%- include("partials/header.ejs") %>
-    <h1>Add New Students Data</h1>
+    <h1>Add New Student Data</h1>
 
-    <div class="card">
-      <div class="card-body">
-        <form action="/add_student" method="post">
-          <div class="mb-3">
-            <label for="college" class="form-label">Select College:</label>
-            <select
-              class="form-select"
-              id="college"
-              name="college"
-              aria-label="Select College"
-            >
-              <option selected value="all">All</option>
-              <option value="vit">VIT</option>
-              <option value="viit">VIIT</option>
-              <option value="vu">VU</option>
-            </select>
+    <div class="card p-4">
+      <form action="/insert_student" method="post">
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <input
+              type="text"
+              class="form-control"
+              name="first_name"
+              placeholder="First name"
+              aria-label="First name"
+              required
+            />
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              class="form-control"
+              name="last_name"
+              placeholder="Last name"
+              aria-label="Last name"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <input
+              type="number"
+              class="form-control"
+              name="mobile"
+              placeholder="Mobile Number"
+              aria-label="Mobile Number"
+              required
+            />
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              class="form-control"
+              name="enrolment_no"
+              placeholder="Enrolment Number"
+              aria-label="Enrolment Number"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="name@example.com"
+            required
+          />
+          <label for="email">Email address</label>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="seat_type"
+                name="seat_type"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option selected value="NRI">NRI</option>
+                <option value="FN">FN</option>
+                <option value="OCI">OCI</option>
+                <option value="PIO">PIO</option>
+                <option value="CIWGC">CIWGC</option>
+              </select>
+              <label for="seat_type">Seat Type</label>
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label for="branch" class="form-label">Select Branch:</label>
-            <select
-              class="form-select"
-              id="branch"
-              name="branch"
-              aria-label="Select Branch"
-            >
-              <option selected value="all">All</option>
-              <option value="cse">Computer Science (CSE)</option>
-              <option value="it">Information Technology (IT)</option>
-              <option value="aids">
-                Artificial Intelligence and Data Science (AIDS)
-              </option>
-              <option value="ai">Artificial Intelligence (AI)</option>
-              <option value="aiml">
-                Artificial Intelligence and Machine Learning (AIML)
-              </option>
-              <option value="civil">Civil Engineering</option>
-              <option value="mech">Mechanical Engineering</option>
-              <option value="entc">
-                Electronics and Telecommunication (ENTC)
-              </option>
-              <option value="ds">Data Science</option>
-              <option value="iot">Internet of Things (IoT)</option>
-            </select>
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="candidate_type"
+                name="candidate_type"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option selected value="NRI">NRI</option>
+                <option value="FN">FN</option>
+                <option value="OCI">OCI</option>
+                <option value="PIO">PIO</option>
+                <option value="CIWGC">CIWGC</option>
+              </select>
+              <label for="candidate_type">Candidate Type</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="college"
+                name="college"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option value="viit">VIIT</option>
+                <option value="vit">VIT</option>
+                <option selected value="vu">VU</option>
+              </select>
+              <label for="college">College Name</label>
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label for="seat_type" class="form-label">Seat Type:</label>
-            <select
-              class="form-select"
-              id="seat_type"
-              name="seat_type"
-              aria-label="Select Seat Type"
-            >
-              <option selected value="all">All</option>
-              <option value="NRI">NRI</option>
-              <option value="OCI">OCI</option>
-              <option value="FN">FN</option>
-              <option value="PIO">PIO</option>
-              <option value="CIWGC">CIWGC</option>
-            </select>
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="branch"
+                name="branch"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option selected value="cse">Computer Science (CSE)</option>
+                <option value="it">Information Technology (IT)</option>
+                <option value="aids">
+                  Artificial Intelligence and Data Science (AIDS)
+                </option>
+                <option value="ai">Artificial Intelligence (AI)</option>
+                <option value="aiml">
+                  Artificial Intelligence and Machine Learning (AIML)
+                </option>
+                <option value="civil">Civil Engineering</option>
+                <option value="mech">Mechanical Engineering</option>
+                <option value="entc">
+                  Electronics and Telecommunication (ENTC)
+                </option>
+                <option value="ds">Data Science</option>
+                <option value="iot">Internet of Things (IoT)</option>
+              </select>
+              <label for="branch">Branch Name</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="fee_status"
+                name="fee_status"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option selected value="paid">Paid</option>
+                <option value="unpaid">Unpaid</option>
+              </select>
+              <label for="fee_status">Fee Status</label>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-primary">
-            View Available Seats
-          </button>
+          <div class="col">
+            <div class="form-floating">
+              <input
+                type="date"
+                class="form-control"
+                name="doa"
+                placeholder="Date"
+                aria-label="Date"
+                required
+              />
+              <label for="doa">Date of Admission:</label>
+            </div>
+          </div>
+        </div>
 
-          <a href="/" class="btn btn-success"> Home</a>
-          <a href="/add_student" class="btn btn-warning"> Clear All</a>
-        </form>
-      </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <button type="submit" class="btn btn-primary me-md-2">Submit</button>
+          <a href="/" class="btn btn-success me-md-2">Home</a>
+          <a href="/add_student" class="btn btn-danger">Clear All</a>
+        </div>
+      </form>
     </div>
+
+    <%- include("partials/footer.ejs") %>
   </body>
 </html>
