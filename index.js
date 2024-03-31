@@ -85,9 +85,57 @@ app.post("/view_data", async (req, res) => {
 app.get("/add_student", (req, res) => {
   res.render("add_student.ejs");
 });
-app.post("/add_student", (req, res) => {
-  // post logic
-  res.send("/add_student post method called");
+
+app.post("/add_student", async (req, res) => {
+  res.send("working");
+  // try {
+  // Extract form data from request body
+  const {
+    first_name,
+    last_name,
+    mobile,
+    email,
+    enrolment_no,
+    seat_type,
+    candidate_type,
+    college,
+    branch,
+    fee_status,
+    doa,
+  } = req.body;
+
+  // Validate form data (add your validation logic here)
+  console.log(first_name, last_name);
+  return;
+  try {
+    //temporary,,
+    // Execute SQL INSERT statement
+    const query = `
+      INSERT INTO student_details (first_name, last_name, mobile, email, enrolment_no, seat_type, candidate_type, college, branch, fee_status, doa)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    `;
+    const values = [
+      first_name,
+      last_name,
+      mobile,
+      email,
+      enrolment_no,
+      seat_type,
+      candidate_type,
+      college,
+      branch,
+      fee_status,
+      doa,
+    ];
+    await db.query(query, values);
+
+    // Send success response
+    res.send("Student data added successfully!");
+  } catch (error) {
+    // Handle errors
+    console.error("Error adding student data:", error);
+    res.status(500).send("An error occurred while adding student data.");
+  }
 });
 
 // Define a default route
