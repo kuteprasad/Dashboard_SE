@@ -1,282 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/head.ejs") %>
-<body>
-  <%- include("partials/header.ejs") %>
-  <h1>Add New Student Data</h1>
+  <%- include("partials/head.ejs") %>
+  <body>
+    <%- include("partials/header.ejs") %>
+    <h1>Add New Student Data</h1>
 
-  <div class="card p-4">
-    <form id="formSection" action="/add_student" method="post" onsubmit="return false;">
-      <div class="row g-3 mb-3">
-        <div class="col">
-          <input type="text" id="first_name" class="form-control" name="first_name" placeholder="First name" aria-label="First name" required>
-        </div>
-        <div class="col">
-          <input type="text" id="last_name" class="form-control" name="last_name" placeholder="Last name" aria-label="Last name" required>
-        </div>
-      </div>
-
-      <div class="row g-3 mb-3">
-        <div class="col">
-          <input type="number" id="mobile" class="form-control" name="mobile" placeholder="Mobile Number" aria-label="Mobile Number" required>
-        </div>
-        <div class="col">
-          <input type="number" id="enrolment_no" class="form-control" name="enrolment_no" placeholder="Enrolment Number" aria-label="Enrolment Number" required>
-        </div>
-      </div>
-
-      <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-        <label for="email">Email address</label>
-      </div>
-
-      <div class="row g-3 mb-3">
-        <div class="col">
-          <div class="form-floating">
-            <select id="seat_type" name="seat_type" class="form-select" aria-label="Floating label select example" required>
-              <option value="" selected disabled>Select Seat Type</option>
-              <option value="NRI">NRI</option>
-              <option value="FN">FN</option>
-              <option value="OCI">OCI</option>
-              <option value="PIO">PIO</option>
-              <option value="CIWGC">CIWGC</option>
-            </select>
-            <label for="seat_type">Seat Type</label>
+    <div class="card p-4">
+      <form
+        id="formSection"
+        action="/add_student"
+        method="post"
+        onsubmit="return false;"
+      >
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <input
+              type="text"
+              id="first_name"
+              class="form-control"
+              name="first_name"
+              placeholder="First name"
+              aria-label="First name"
+              required
+            />
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              id="last_name"
+              class="form-control"
+              name="last_name"
+              placeholder="Last name"
+              aria-label="Last name"
+              required
+            />
           </div>
         </div>
 
-        <div class="col">
-          <div class="form-floating">
-            <select id="candidate_type" name="candidate_type" class="form-select" aria-label="Floating label select example" required>
-              <option value="" selected disabled>Select Candidate Type</option>
-              <option value="NRI">NRI</option>
-              <option value="FN">FN</option>
-              <option value="OCI">OCI</option>
-              <option value="PIO">PIO</option>
-              <option value="CIWGC">CIWGC</option>
-            </select>
-            <label for="candidate_type">Candidate Type</label>
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <input
+              type="number"
+              id="mobile"
+              class="form-control"
+              name="mobile"
+              placeholder="Mobile Number"
+              aria-label="Mobile Number"
+              required
+            />
           </div>
+          <div class="col">
+            <input
+              type="number"
+              id="enrolment_no"
+              class="form-control"
+              name="enrolment_no"
+              placeholder="Enrolment Number"
+              aria-label="Enrolment Number"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="name@example.com"
+            required
+          />
+          <label for="email">Email address</label>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="seat_type"
+                name="seat_type"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option value="" selected disabled>Select Seat Type</option>
+                <option value="NRI">NRI</option>
+                <option value="FN">FN</option>
+                <option value="OCI">OCI</option>
+                <option value="PIO">PIO</option>
+                <option value="CIWGC">CIWGC</option>
+              </select>
+              <label for="seat_type">Seat Type</label>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="candidate_type"
+                name="candidate_type"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option value="" selected disabled>
+                  Select Candidate Type
+                </option>
+                <option value="NRI">NRI</option>
+                <option value="FN">FN</option>
+                <option value="OCI">OCI</option>
+                <option value="PIO">PIO</option>
+                <option value="CIWGC">CIWGC</option>
+              </select>
+              <label for="candidate_type">Candidate Type</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="college"
+                name="college"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option value="" selected disabled>
+                  Please Select College
+                </option>
+                <option value="viit">VIIT</option>
+                <option value="vit">VIT</option>
+                <option value="vu">VU</option>
+              </select>
+              <label for="college">College Name</label>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="branch"
+                name="branch"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option value="" selected disabled>Select Branch</option>
+                <option value="cse">Computer Science (CSE)</option>
+                <option value="it">Information Technology (IT)</option>
+                <option value="aids">
+                  Artificial Intelligence and Data Science (AIDS)
+                </option>
+                <option value="ai">Artificial Intelligence (AI)</option>
+                <option value="aiml">
+                  Artificial Intelligence and Machine Learning (AIML)
+                </option>
+                <option value="civil">Civil Engineering</option>
+                <option value="mech">Mechanical Engineering</option>
+                <option value="entc">
+                  Electronics and Telecommunication (ENTC)
+                </option>
+                <option value="ds">Data Science</option>
+                <option value="iot">Internet of Things (IoT)</option>
+              </select>
+              <label for="branch">Branch Name</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="fee_status"
+                name="fee_status"
+                class="form-select"
+                aria-label="Floating label select example"
+                required
+              >
+                <option value="" selected disabled>Select Fee Status</option>
+                <option value="paid">Paid</option>
+                <option value="unpaid">Unpaid</option>
+              </select>
+              <label for="fee_status">Fee Status</label>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="form-floating">
+              <input
+                type="date"
+                class="form-control"
+                id="doa"
+                name="doa"
+                placeholder="Date"
+                aria-label="Date"
+                required
+              />
+              <label for="doa">Date of Admission:</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <button
+            type="button"
+            class="btn btn-primary me-md-2"
+            onclick="showSummary()"
+          >
+            Submit
+          </button>
+          <a href="/" class="btn btn-success me-md-2">Home</a>
+          <button type="reset" class="btn btn-danger">Clear All</button>
+        </div>
+      </form>
+
+      <div id="summarySection" style="display: none">
+        <h2>Summary</h2>
+        <div class="row mb-3">
+          <div class="col">
+            <strong>First Name:</strong>
+            <span id="summaryFirstName"></span>
+          </div>
+          <div class="col">
+            <strong>Last Name:</strong>
+            <span id="summaryLastName"></span>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <strong>Mobile:</strong>
+            <span id="summaryMobile"></span>
+          </div>
+          <div class="col">
+            <strong>Enrolment Number:</strong>
+            <span id="summaryEnrolmentNo"></span>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <strong>Email:</strong>
+            <span id="summaryEmail"></span>
+          </div>
+          <div class="col">
+            <strong>Seat Type:</strong>
+            <span id="summarySeatType"></span>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <strong>Candidate Type:</strong>
+            <span id="summaryCandidateType"></span>
+          </div>
+          <div class="col">
+            <strong>College:</strong>
+            <span id="summaryCollege"></span>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <strong>Branch:</strong>
+            <span id="summaryBranch"></span>
+          </div>
+          <div class="col">
+            <strong>Fee Status:</strong>
+            <span id="summaryFeeStatus"></span>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <strong>Date of Admission:</strong>
+            <span id="summaryDoa"></span>
+          </div>
+        </div>
+
+        <div class="form-check mt-3">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="confirmCheckbox"
+          />
+          <label class="form-check-label" for="confirmCheckbox"
+            >Confirm Details</label
+          >
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+          <button
+            type="button"
+            class="btn btn-primary me-md-2"
+            onclick="confirmDetails()"
+          >
+            Confirm
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="cancelConfirmation()"
+          >
+            Cancel
+          </button>
         </div>
       </div>
-
-      <div class="row g-3 mb-3">
-        <div class="col">
-          <div class="form-floating">
-            <select id="college" name="college" class="form-select" aria-label="Floating label select example" required>
-              <option value="" selected disabled>Please Select College</option>
-              <option value="viit">VIIT</option>
-              <option value="vit">VIT</option>
-              <option value="vu">VU</option>
-            </select>
-            <label for="college">College Name</label>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="form-floating">
-            <select id="branch" name="branch" class="form-select" aria-label="Floating label select example" required>
-              <option value="" selected disabled>Select Branch</option>
-              <option value="cse">Computer Science (CSE)</option>
-              <option value="it">Information Technology (IT)</option>
-              <option value="aids">Artificial Intelligence and Data Science (AIDS)</option>
-              <option value="ai">Artificial Intelligence (AI)</option>
-              <option value="aiml">Artificial Intelligence and Machine Learning (AIML)</option>
-              <option value="civil">Civil Engineering</option>
-              <option value="mech">Mechanical Engineering</option>
-              <option value="entc">Electronics and Telecommunication (ENTC)</option>
-              <option value="ds">Data Science</option>
-              <option value="iot">Internet of Things (IoT)</option>
-            </select>
-            <label for="branch">Branch Name</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="row g-3 mb-3">
-        <div class="col">
-          <div class="form-floating">
-            <select id="fee_status" name="fee_status" class="form-select" aria-label="Floating label select example" required>
-              <option value="" selected disabled>Select Fee Status</option>
-              <option value="paid">Paid</option>
-              <option value="unpaid">Unpaid</option>
-            </select>
-            <label for="fee_status">Fee Status</label>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="form-floating">
-            <input type="date" class="form-control" id="doa" name="doa" placeholder="Date" aria-label="Date" required>
-            <label for="doa">Date of Admission:</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="button" class="btn btn-primary me-md-2" onclick="showSummary()">Submit</button>
-        <a href="/" class="btn btn-success me-md-2">Home</a>
-        <button type="reset" class="btn btn-danger">Clear All</button>
-      </div>
-    </form>
-
-    <div id="summarySection" style="display: none;">
-  <h2>Summary</h2>
-  <div class="row mb-3">
-    <div class="col">
-      <strong>First Name:</strong>
-      <span id="summaryFirstName"></span>
     </div>
-    <div class="col">
-      <strong>Last Name:</strong>
-      <span id="summaryLastName"></span>
-    </div>
-  </div>
 
-  <div class="row mb-3">
-    <div class="col">
-      <strong>Mobile:</strong>
-      <span id="summaryMobile"></span>
-    </div>
-    <div class="col">
-      <strong>Enrolment Number:</strong>
-      <span id="summaryEnrolmentNo"></span>
-    </div>
-  </div>
+    <%- include("partials/footer.ejs") %>
 
-  <div class="row mb-3">
-    <div class="col">
-      <strong>Email:</strong>
-      <span id="summaryEmail"></span>
-    </div>
-    <div class="col">
-      <strong>Seat Type:</strong>
-      <span id="summarySeatType"></span>
-    </div>
-  </div>
+    <script>
+      function showSummary() {
+        // Get form values
+        const firstName = document.getElementById("first_name").value;
+        const lastName = document.getElementById("last_name").value;
+        const mobile = document.getElementById("mobile").value;
+        const enrolmentNo = document.getElementById("enrolment_no").value;
+        const email = document.getElementById("email").value;
+        const seatType = document.getElementById("seat_type").value;
+        const candidateType = document.getElementById("candidate_type").value;
+        const college = document.getElementById("college").value;
+        const branch = document.getElementById("branch").value;
+        const feeStatus = document.getElementById("fee_status").value;
+        const doa = document.getElementById("doa").value;
 
-  <div class="row mb-3">
-    <div class="col">
-      <strong>Candidate Type:</strong>
-      <span id="summaryCandidateType"></span>
-    </div>
-    <div class="col">
-      <strong>College:</strong>
-      <span id="summaryCollege"></span>
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col">
-      <strong>Branch:</strong>
-      <span id="summaryBranch"></span>
-    </div>
-    <div class="col">
-      <strong>Fee Status:</strong>
-      <span id="summaryFeeStatus"></span>
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col">
-      <strong>Date of Admission:</strong>
-      <span id="summaryDoa"></span>
-    </div>
-  </div>
-
-  <div class="form-check mt-3">
-    <input class="form-check-input" type="checkbox" id="confirmCheckbox">
-    <label class="form-check-label" for="confirmCheckbox">Confirm Details</label>
-  </div>
-
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-    <button type="button" class="btn btn-primary me-md-2" onclick="confirmDetails()">Confirm</button>
-    <button type="button" class="btn btn-secondary" onclick="cancelConfirmation()">Cancel</button>
-  </div>
-</div>
-
-
-  <%- include("partials/footer.ejs") %>
-
- 
-   <script>
-  function showSummary() {
-    // Get form values
-    const firstName = document.getElementById("first_name").value;
-    const lastName = document.getElementById("last_name").value;
-    const mobile = document.getElementById("mobile").value;
-    const enrolmentNo = document.getElementById("enrolment_no").value;
-    const email = document.getElementById("email").value;
-    const seatType = document.getElementById("seat_type").value;
-    const candidateType = document.getElementById("candidate_type").value;
-    const college = document.getElementById("college").value;
-    const branch = document.getElementById("branch").value;
-    const feeStatus = document.getElementById("fee_status").value;
-    const doa = document.getElementById("doa").value;
-
-    if (!firstName || !lastName || !mobile || !enrolmentNo || !email || !seatType || !candidateType || !college || !branch || !feeStatus || !doa) {
-                alert("Please fill in all required fields.");
-                return;
-            }
-
-           const mobilePattern = /[0-9]{10,}/;
-            const enrolmentPattern = /[0-9]{6,}/;
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (!mobilePattern.test(mobile)) {
-                alert("Please enter a valid mobile number.");
-                return;
-            }
-
-            if (!enrolmentPattern.test(enrolmentNo)) {
-                alert("Please enter a valid enrolment number.");
-                return;
-            }
-
-            if (!emailPattern.test(email)) {
-                alert("Please enter a valid email address.");
-                return;
-            }
-
-    // Populate summary fields
-    document.getElementById("summaryFirstName").textContent = firstName;
-    document.getElementById("summaryLastName").textContent = lastName;
-    document.getElementById("summaryMobile").textContent = mobile;
-    document.getElementById("summaryEnrolmentNo").textContent = enrolmentNo;
-    document.getElementById("summaryEmail").textContent = email;
-    document.getElementById("summarySeatType").textContent = seatType;
-    document.getElementById("summaryCandidateType").textContent = candidateType;
-    document.getElementById("summaryCollege").textContent = college;
-    document.getElementById("summaryBranch").textContent = branch;
-    document.getElementById("summaryFeeStatus").textContent = feeStatus;
-    document.getElementById("summaryDoa").textContent = doa;
-
-    // Hide form section
-    document.getElementById("formSection").style.display = "none";
-
-    // Show summary section
-    document.getElementById("summarySection").style.display = "block";
-  }
-
-  function confirmDetails() {
-            const confirmed = document.getElementById("confirmCheckbox").checked;
-
-            if (confirmed) {
-                document.getElementById("formSection").submit();
-            } else {
-                alert("Please confirm your details.");
-            }
+        if (
+          !firstName ||
+          !lastName ||
+          !mobile ||
+          !enrolmentNo ||
+          !email ||
+          !seatType ||
+          !candidateType ||
+          !college ||
+          !branch ||
+          !feeStatus ||
+          !doa
+        ) {
+          alert("Please fill in all required fields.");
+          return;
         }
 
-  function cancelConfirmation() {
-    // Show form section
-    document.getElementById("formSection").style.display = "block";
+        const mobilePattern = /[0-9]{10,}/;
+        const enrolmentPattern = /[0-9]{6,}/;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // Hide summary section
-    document.getElementById("summarySection").style.display = "none";
-  }
-</script>
+        if (!mobilePattern.test(mobile)) {
+          alert("Please enter a valid mobile number.");
+          return;
+        }
 
-  
-</body>
+        if (!enrolmentPattern.test(enrolmentNo)) {
+          alert("Please enter a valid enrolment number.");
+          return;
+        }
+
+        if (!emailPattern.test(email)) {
+          alert("Please enter a valid email address.");
+          return;
+        }
+
+        // Populate summary fields
+        document.getElementById("summaryFirstName").textContent = firstName;
+        document.getElementById("summaryLastName").textContent = lastName;
+        document.getElementById("summaryMobile").textContent = mobile;
+        document.getElementById("summaryEnrolmentNo").textContent = enrolmentNo;
+        document.getElementById("summaryEmail").textContent = email;
+        document.getElementById("summarySeatType").textContent = seatType;
+        document.getElementById("summaryCandidateType").textContent =
+          candidateType;
+        document.getElementById("summaryCollege").textContent = college;
+        document.getElementById("summaryBranch").textContent = branch;
+        document.getElementById("summaryFeeStatus").textContent = feeStatus;
+        document.getElementById("summaryDoa").textContent = doa;
+
+        // Hide form section
+        document.getElementById("formSection").style.display = "none";
+
+        // Show summary section
+        document.getElementById("summarySection").style.display = "block";
+      }
+
+      function confirmDetails() {
+        const confirmed = document.getElementById("confirmCheckbox").checked;
+
+        if (confirmed) {
+          document.getElementById("formSection").submit();
+        } else {
+          alert("Please confirm your details.");
+        }
+      }
+
+      function cancelConfirmation() {
+        // Show form section
+        document.getElementById("formSection").style.display = "block";
+
+        // Hide summary section
+        document.getElementById("summarySection").style.display = "none";
+      }
+    </script>
+  </body>
 </html>
