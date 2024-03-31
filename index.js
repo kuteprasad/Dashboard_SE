@@ -37,7 +37,7 @@ app.get("/view_data", async (req, res) => {
     const data = {
       local: false,
     };
-    res.render("main.ejs", { data });
+    res.render("view_data.ejs", { data });
   } catch (error) {
     console.log(error);
     res.send("error occured : ", error);
@@ -74,7 +74,7 @@ app.post("/view_data", async (req, res) => {
       response: result.rows,
     };
 
-    res.render("main.ejs", { data: data });
+    res.render("view_data.ejs", { data: data });
   } catch (error) {
     const status = error.status || 500;
     console.log(error);
@@ -82,29 +82,12 @@ app.post("/view_data", async (req, res) => {
   }
 });
 
-// Route to fetch data for the dashboard
-app.get("/dashboard", async (req, res) => {
-  try {
-    const client = await pool.connect();
-    const result = await client.query(
-      "SELECT college, branch, SUM(intake) as total_intake, SUM(filled) as total_filled FROM seat_allocations GROUP BY college, branch"
-    );
-    const dashboardData = result.rows.map((row) => {
-      const remainingSeats = row.total_intake - row.total_filled;
-      return {
-        department: row.branch,
-        seats: {
-          nri: remainingSeats, // Assuming remaining seats are available for NRI quota
-          general: 0, // You may need to calculate this based on your logic
-        },
-      };
-    });
-    client.release();
-    res.json(dashboardData);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+app.get("/add_student", (req, res) => {
+  res.render("add_student.ejs");
+});
+app.post("/add_student", (req, res) => {
+  // post logic
+  res.send("/add_student post method called");
 });
 
 // Define a default route
