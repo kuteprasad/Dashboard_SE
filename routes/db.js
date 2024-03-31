@@ -1,23 +1,35 @@
-import postgres from "postgres";
+import pg from "pg";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file in the config folder
 dotenv.config({ path: "./config/.env" });
 
 // Extract environment variables
-const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
+const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, DATABASE_OPTION } = process.env;
+const { DB_PASSWORD, DB_NAME, DB_USER, DB_HOST } = process.env;
 
-// Create a PostgreSQL client instance
-const sql = postgres({
-  host: PGHOST,
-  database: PGDATABASE,
-  username: PGUSER,
-  password: PGPASSWORD,
-  port: 5432,
-  ssl: "require",
-  connection: {
-    options: `project=${ENDPOINT_ID}`,
-  },
-});
+let db;
+if (DATABASE_OPTION === "remote") {
+  db = new pg.Client({
+    user: PGUSER,
+    host: PGHOST,
+    database: PGDATABASE,
+    password: PGPASSWORD,
+    port: 5432,
+    ssl: {
+      // Specify SSL options here
+      rejectUnauthorized: false, // You might need to adjust this based on your SSL configuration
+    },
+  });
+} else if (DATABASE_OPTION === "local") {
+  db = new pg.Client({
+    user: DB_USER,
+    host: DB_HOST,
+    database: DB_NAME,
+    password: DB_PASSWORD,
+    port: 5432,
+  });
+}
 
-export { sql };
+db.connect();
+
+export { db };

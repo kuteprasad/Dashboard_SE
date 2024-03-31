@@ -1,0 +1,27 @@
+{
+  "name": "dashboard_se",
+  "version": "1.0.0",
+  "description": "creating a simple dashboard project with Tejaswini, Tanmay and Prasad. Faculty Mr. Pawan Wawage sir. Gonna used by them.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tejaswini-41/Dashboard_SE.git"
+  },
+  "author": "Tejaswini and Prasad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tejaswini-41/Dashboard_SE/issues"
+  },
+  "homepage": "https://github.com/Tejaswini-41/Dashboard_SE#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "pg": "^8.11.4"
+  }
+}

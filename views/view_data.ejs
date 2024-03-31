@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head.ejs") %>
+  <body>
+    <%- include("partials/header.ejs") %>
+    <h1>Seats Availability Dashboard</h1>
+
+    <div class="card">
+      <div class="card-body">
+        <form action="/view_data" method="post">
+          <div class="mb-3">
+            <label for="college" class="form-label">Select College:</label>
+            <select
+              class="form-select"
+              id="college"
+              name="college"
+              aria-label="Select College"
+            >
+              <option selected value="all">All</option>
+              <option value="vit">VIT</option>
+              <option value="viit">VIIT</option>
+              <option value="vu">VU</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="branch" class="form-label">Select Branch:</label>
+            <select
+              class="form-select"
+              id="branch"
+              name="branch"
+              aria-label="Select Branch"
+            >
+              <option selected value="all">All</option>
+              <option value="cse">Computer Science (CSE)</option>
+              <option value="it">Information Technology (IT)</option>
+              <option value="aids">
+                Artificial Intelligence and Data Science (AIDS)
+              </option>
+              <option value="ai">Artificial Intelligence (AI)</option>
+              <option value="aiml">
+                Artificial Intelligence and Machine Learning (AIML)
+              </option>
+              <option value="civil">Civil Engineering</option>
+              <option value="mech">Mechanical Engineering</option>
+              <option value="entc">
+                Electronics and Telecommunication (ENTC)
+              </option>
+              <option value="ds">Data Science</option>
+              <option value="iot">Internet of Things (IoT)</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="seat_type" class="form-label">Seat Type:</label>
+            <select
+              class="form-select"
+              id="seat_type"
+              name="seat_type"
+              aria-label="Select Seat Type"
+            >
+              <option selected value="all">All</option>
+              <option value="NRI">NRI</option>
+              <option value="OCI">OCI</option>
+              <option value="FN">FN</option>
+              <option value="PIO">PIO</option>
+              <option value="CIWGC">CIWGC</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            View Available Seats
+          </button>
+
+          <a href="/" class="btn btn-success"> Home</a>
+          <a href="/view_data" class="btn btn-warning"> Clear All</a>
+        </form>
+      </div>
+    </div>
+
+    <div class="container">
+      <% if ( data.local && data.response.length > 0) { %>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Sr.No.:</th>
+            <th>College</th>
+            <th>Branch</th>
+            <th>Seat Type</th>
+            <th>Intake</th>
+            <th>Filled</th>
+            <th>Vacant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%data.response.forEach(function(row, index) { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= row.college %></td>
+            <td><%= row.branch %></td>
+            <td><%= row.seat_type %></td>
+            <td><%= row.intake %></td>
+            <td><%= row.filled %></td>
+            <td><%= row.vacant %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } else if (data.local && data.response.length == 0) {%>
+      <tr>
+        <td colspan="7">
+          No Data Available For this Category. Please Contact the Administrator.
+        </td>
+      </tr>
+      <% } else { %>
+      <tr>
+        <td colspan="7">
+          No Data to show. Click on the View Available Data button above.
+        </td>
+      </tr>
+    </div>
+    <% } %> <%- include("partials/footer.ejs") %>
+  </body>
+</html>
