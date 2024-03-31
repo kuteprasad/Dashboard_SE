@@ -21,6 +21,30 @@ CREATE TABLE IF NOT EXISTS seat_data (
     password_hash VARCHAR(255)
     );
 
+    CREATE TABLE IF NOT EXISTS student_details (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    mobile VARCHAR(15) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    enrolment_no VARCHAR(20) UNIQUE NOT NULL,
+    seat_type VARCHAR(10) CHECK (seat_type IN ('NRI', 'FN', 'OCI', 'PIO', 'CIWGC')) NOT NULL,
+    candidate_type VARCHAR(10) CHECK (candidate_type IN ('NRI', 'FN', 'OCI', 'PIO', 'CIWGC')) NOT NULL,
+    college VARCHAR(10) CHECK (college IN ('viit', 'vit', 'vu')) NOT NULL,
+    branch VARCHAR(10) CHECK (branch IN ('cse', 'it', 'aids', 'ai', 'aiml', 'civil', 'mech', 'entc', 'ds', 'iot')) NOT NULL,
+    fee_status VARCHAR(10) CHECK (fee_status IN ('paid', 'unpaid')) NOT NULL,
+    doa DATE NOT NULL
+);
+
+INSERT INTO student_details (first_name, last_name, mobile, email, enrolment_no, seat_type, candidate_type, college, branch, fee_status, doa)
+VALUES
+    ('Akash', 'Sharma', '9876543210', 'akash.sharma@example.com', '20220001', 'NRI', 'NRI', 'viit', 'cse', 'paid', '2024-03-31'),
+    ('Neha', 'Patel', '8765432109', 'neha.patel@example.com', '20220002', 'FN', 'FN', 'vit', 'it', 'paid', '2024-03-31'),
+    ('Rahul', 'Singh', '7654321098', 'rahul.singh@example.com', '20220003', 'OCI', 'OCI', 'vu', 'civil', 'unpaid', '2024-03-31'),
+    ('Priya', 'Das', '6543210987', 'priya.das@example.com', '20220004', 'PIO', 'PIO', 'viit', 'entc', 'paid', '2024-03-31'),
+    ('Ananya', 'Gupta', '5432109876', 'ananya.gupta@example.com', '20220005', 'CIWGC', 'CIWGC', 'vit', 'mech', 'unpaid', '2024-03-31');
+
+
 INSERT INTO seat_data (college, branch, seat_type, intake, filled, vacant)
 VALUES
     ('vit', 'cse', 'NRI', 100, 50, 50),
