@@ -97,6 +97,7 @@ app.post("/view_data", async (req, res) => {
     const data = {
       local: true,
       response: result.rows,
+      names: names,
     };
 
     res.render("view_data.ejs", { data: data });

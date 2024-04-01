@@ -34,6 +34,42 @@ footer {
   width: 100%;
 }
 
+table {
+  border-collapse: collapse;
+  width: 80%;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+caption {
+  caption-side: top;
+  text-align: center;
+  font-size: 1.2em; /* Adjust font size as needed */
+  margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+/* Ensure proper table borders */
+/* @media print {
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          border: 1px solid #000;
+        }
+
+        th,
+        td {
+          border: 1px solid #000;
+        } */
+/* } */
+
 /* Small Screens (most smartphones) */
 @media only screen and (575px < width <= 768px) {
 }
