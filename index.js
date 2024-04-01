@@ -144,13 +144,11 @@ app.get("/view_data", async (req, res) => {
   }
 });
 
-app.post("/view_data", async (req, res) => {
+app.post('/view_data', async (req, res) => {
   try {
-    // Capture the selected options from the form
     const { college, branch, seat_type } = req.body;
 
-    // Construct the SQL query based on the selected options
-    let sqlQuery = "SELECT * FROM seat_data WHERE 1 = 1"; // Initial condition
+    let sqlQuery = "SELECT * FROM seat_data WHERE 1 = 1";
 
     if (college !== "all") {
       sqlQuery += ` AND college = '${college}'`;
@@ -164,10 +162,7 @@ app.post("/view_data", async (req, res) => {
       sqlQuery += ` AND seat_type = '${seat_type}'`;
     }
 
-    // Replace the following line with your method of executing SQL queries
-    // Execute the query using the sql method
     const result = await db.query(sqlQuery);
-    // console.log(result.rows);
 
     const data = {
       local: true,
@@ -176,11 +171,11 @@ app.post("/view_data", async (req, res) => {
 
     res.render("view_data.ejs", { data: data });
   } catch (error) {
-    const status = error.status || 500;
-    console.log(error);
-    res.status(status).send(error);
+    console.error(error);
+    res.status(500).send("Internal server error");
   }
 });
+
 
 app.get("/add_student", (req, res) => {
   res.render("add_student.ejs");
