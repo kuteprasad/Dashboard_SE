@@ -32,8 +32,8 @@
     </form>
 
     <% for (let college_key of ['viit', 'vit', 'vu']) { %>
-    <div id="<%= college_key %>-table" style="display: none" class="table">
-      <table>
+    <div id="<%= college_key %>-table" style="display: none" class="container">
+      <table class="table table-hover">
         <caption>
           <h2><%= names.college[college_key] %></h2>
         </caption>
