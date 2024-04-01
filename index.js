@@ -1,5 +1,5 @@
 // Import required packages
-import express, { query } from "express";
+import express, { query } from "./node_modules/express";
 import bodyParser from "./node_modules/body-parser";
 
 import { db } from "./routes/db.js"; // Import sql from db.js

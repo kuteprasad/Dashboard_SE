@@ -1,4 +1,4 @@
-import pg from "pg";
+import pg from "./node_modules/pg";
 import dotenv from "dotenv";
 
 dotenv.config({ path: "./config/.env" });
