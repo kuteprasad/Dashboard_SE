@@ -21,6 +21,35 @@ CREATE TABLE IF NOT EXISTS seat_data (
     password_hash VARCHAR(255)
     );
 
+SELECT 
+    college,
+    branch,
+    SUM(CASE WHEN seat_type = 'NRI' THEN intake ELSE 0 END) AS nri_intake,
+    SUM(CASE WHEN seat_type = 'NRI' THEN filled ELSE 0 END) AS nri_filled,
+    SUM(CASE WHEN seat_type = 'NRI' THEN vacant ELSE 0 END) AS nri_vacant,
+    SUM(CASE WHEN seat_type = 'OCI' THEN intake ELSE 0 END) AS oci_intake,
+    SUM(CASE WHEN seat_type = 'OCI' THEN filled ELSE 0 END) AS oci_filled,
+    SUM(CASE WHEN seat_type = 'OCI' THEN vacant ELSE 0 END) AS oci_vacant,
+    SUM(CASE WHEN seat_type = 'FN' THEN intake ELSE 0 END) AS fn_intake,
+    SUM(CASE WHEN seat_type = 'FN' THEN filled ELSE 0 END) AS fn_filled,
+    SUM(CASE WHEN seat_type = 'FN' THEN vacant ELSE 0 END) AS fn_vacant,
+    SUM(CASE WHEN seat_type = 'PIO' THEN intake ELSE 0 END) AS pio_intake,
+    SUM(CASE WHEN seat_type = 'PIO' THEN filled ELSE 0 END) AS pio_filled,
+    SUM(CASE WHEN seat_type = 'PIO' THEN vacant ELSE 0 END) AS pio_vacant,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN intake ELSE 0 END) AS ciwgc_intake,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN filled ELSE 0 END) AS ciwgc_filled,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN vacant ELSE 0 END) AS ciwgc_vacant,
+    SUM(intake) AS total_intake,
+    SUM(filled) AS total_filled,
+    SUM(vacant) AS total_vacant
+FROM 
+    seat_data
+GROUP BY 
+    college, branch
+ORDER BY 
+    college ASC, branch ASC;
+
+
     CREATE TABLE IF NOT EXISTS student_details (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,

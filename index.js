@@ -99,7 +99,7 @@
 //     console.log(`Server is listening at http://localhost:${port}`);
 
 // Import required packages
-import express from "express";
+import express, { query } from "express";
 import bodyParser from "body-parser";
 
 import { db } from "./routes/db.js"; // Import sql from db.js
@@ -187,29 +187,64 @@ app.get("/add_student", (req, res) => {
 });
 
 app.post("/add_student", async (req, res) => {
-  // res.send("working");
-  try {
-    // Extract form data from request body
-    const {
-      first_name,
-      last_name,
-      mobile,
-      email,
-      enrolment_no,
-      seat_type,
-      candidate_type,
-      college,
-      branch,
-      fee_status,
-      doa,
-    } = req.body;
+  // Extract form data from request body
+  const {
+    first_name,
+    last_name,
+    mobile,
+    email,
+    enrolment_no,
+    seat_type,
+    candidate_type,
+    college,
+    branch,
+    fee_status,
+    doa,
+  } = req.body;
 
-    // Execute SQL INSERT statement
-    const query = `
+  try {
+    // Start a transaction
+    await db.query("BEGIN");
+
+    // Execute the first SQL statement to update seat_data
+    const updateQuery = `
+      UPDATE seat_data
+      SET filled = filled + 1, vacant = vacant - 1
+      WHERE college = $1
+        AND branch = $2
+        AND seat_type = $3
+        AND vacant > 0
+        RETURNING *;
+    `;
+    const updateValues = [college, branch, seat_type];
+    const updateResult = await db.query(updateQuery, updateValues);
+
+    // Check if any rows were affected by the UPDATE
+    if (updateResult.rowCount === 0) {
+      // No vacant seats available, so rollback the transaction
+      await db.query("ROLLBACK");
+      const htmlResponse = `
+      
+          <script>
+              // Display alert when the page is loaded
+              alert("No vacant seats available...");
+
+              // Redirect to home route after a short delay
+              setTimeout(function() {
+                  window.location.href = '/';
+              }, 0);
+          </script>
+      
+    `;
+      res.status(404).send(htmlResponse);
+    }
+
+    // Execute the second SQL statement to insert into student_details
+    const insertQuery = `
       INSERT INTO student_details (first_name, last_name, mobile, email, enrolment_no, seat_type, candidate_type, college, branch, fee_status, doa)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     `;
-    const values = [
+    const insertValues = [
       first_name,
       last_name,
       mobile,
@@ -222,62 +257,107 @@ app.post("/add_student", async (req, res) => {
       fee_status,
       doa,
     ];
-    await db.query(query, values);
+    await db.query(insertQuery, insertValues);
+
+    // If both SQL statements executed successfully, commit the transaction
+    await db.query("COMMIT");
+
+    // Send success response
 
     const htmlResponse = `
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Added</title>
-</head>
-<body>
-    <script>
-        // Display alert when the page is loaded
-        alert("Data added Successfully!");
+          <script>
+              // Display alert when the page is loaded
+              alert("Data added Successfully!");
 
-        // Redirect to home route after a short delay
-        setTimeout(function() {
-            window.location.href = '/';
-        }, 0);
-    </script>
-    </body>
-</html>
-
-        `;
+              // Redirect to home route after a short delay
+              setTimeout(function() {
+                  window.location.href = '/';
+              }, 0);
+          </script>
+    `;
     res.status(200).send(htmlResponse);
   } catch (error) {
-    if (error.code == "23505") {
-      const htmlResponse = `
-      <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error</title>
-</head>
-<body>
-    <script>
-        // Display alert when the page is loaded
-        alert("Data already exists.");
+    // If an error occurred, rollback the transaction
+    await db.query("ROLLBACK");
 
-        // Redirect to home route after a short delay
-        setTimeout(function() {
-            window.location.href = '/';
-        }, 0);
-    </script>
-    </body>
-</html>
-        `;
+    // Handle the error
+    if (error.code === "23505") {
+      // Data already exists error
+      const htmlResponse = `
+        
+            <script>
+                // Display alert when the page is loaded
+                alert("Data already exists.");
+
+                // Redirect to home route after a short delay
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 0);
+            </script>
+      
+      `;
       res.status(400).send(htmlResponse);
     } else {
-      // Handle other errors
+      // Other errors
       console.error("Error adding student data:", error);
-      res.status(500).send("An error occurred while adding student data.");
+      const htmlResponse = `
+            <script>
+                // Display alert when the page is loaded
+                alert("An error occurred while adding student data.");
+
+                // Redirect to home route after a short delay
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 0);
+            </script>
+      `;
+      res.status(500).send(htmlResponse);
     }
   }
 });
+
+app.get("/report", async (req, res) => {
+  try {
+    const query = `SELECT 
+    college,
+    branch,
+    SUM(CASE WHEN seat_type = 'NRI' THEN intake ELSE 0 END) AS nri_intake,
+    SUM(CASE WHEN seat_type = 'NRI' THEN filled ELSE 0 END) AS nri_filled,
+    SUM(CASE WHEN seat_type = 'NRI' THEN vacant ELSE 0 END) AS nri_vacant,
+    SUM(CASE WHEN seat_type = 'OCI' THEN intake ELSE 0 END) AS oci_intake,
+    SUM(CASE WHEN seat_type = 'OCI' THEN filled ELSE 0 END) AS oci_filled,
+    SUM(CASE WHEN seat_type = 'OCI' THEN vacant ELSE 0 END) AS oci_vacant,
+    SUM(CASE WHEN seat_type = 'FN' THEN intake ELSE 0 END) AS fn_intake,
+    SUM(CASE WHEN seat_type = 'FN' THEN filled ELSE 0 END) AS fn_filled,
+    SUM(CASE WHEN seat_type = 'FN' THEN vacant ELSE 0 END) AS fn_vacant,
+    SUM(CASE WHEN seat_type = 'PIO' THEN intake ELSE 0 END) AS pio_intake,
+    SUM(CASE WHEN seat_type = 'PIO' THEN filled ELSE 0 END) AS pio_filled,
+    SUM(CASE WHEN seat_type = 'PIO' THEN vacant ELSE 0 END) AS pio_vacant,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN intake ELSE 0 END) AS ciwgc_intake,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN filled ELSE 0 END) AS ciwgc_filled,
+    SUM(CASE WHEN seat_type = 'CIWGC' THEN vacant ELSE 0 END) AS ciwgc_vacant,
+    SUM(intake) AS total_intake,
+    SUM(filled) AS total_filled,
+    SUM(vacant) AS total_vacant
+FROM 
+    seat_data
+GROUP BY 
+    college, branch
+ORDER BY 
+    college ASC, branch ASC; `;
+
+    const response = await db.query(query);
+    // console.log(response.rows);
+
+    res.render("report.ejs", {
+      collegeData: response.rows,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/report", (req, res) => {});
 
 // Define a default route
 app.get("/", (req, res) => {
