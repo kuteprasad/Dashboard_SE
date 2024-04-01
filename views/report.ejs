@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head.ejs") %>
+  <body>
+    <%- include("partials/header.ejs") %>
+    <form action="">
+      <div class="col">
+        <div class="form-floating">
+          <select
+            id="college"
+            name="college"
+            class="form-select"
+            aria-label="Floating label select example"
+            required
+          >
+            <option value="" selected disabled>Please Select College</option>
+            <option value="viit">VIIT</option>
+            <option value="vit">VIT</option>
+            <option value="vu">VU</option>
+          </select>
+          <label for="college">College Name</label>
+        </div>
+      </div>
+      <div class="mt-3 flex-center">
+        <button type="button" id="getReportBtn" class="btn btn-info">
+          Get Report
+        </button>
+        <div>
+          <a href="/" class="btn btn-success">Home</a>
+        </div>
+      </div>
+    </form>
+
+    <% for (let college_key of ['viit', 'vit', 'vu']) { %>
+    <div id="<%= college_key %>-table" style="display: none" class="container">
+      <table class="table table-hover">
+        <caption>
+          <h2><%= names.college[college_key] %></h2>
+        </caption>
+        <thead>
+          <tr>
+            <th rowspan="2">Branch</th>
+            <th colspan="3">NRI</th>
+            <th colspan="3">OCI</th>
+            <th colspan="3">FN</th>
+            <th colspan="3">PIO</th>
+            <th colspan="3">CIWGC</th>
+            <th colspan="3">Total</th>
+          </tr>
+          <tr>
+            <th hidden></th>
+            <th>Total</th>
+            <th>Filled</th>
+            <th>Vacant</th>
+            <th>Total</th>
+            <th>Filled</th>
+            <th>Vacant</th>
+            <th>Total</th>
+            <th>Filled</th>
+            <th>Vacant</th>
+            <th>Total</th>
+            <th>Filled</th>
+            <th>Vacant</th>
+            <th>Total</th>
+            <th>Filled</th>
+            <th>Vacant</th>
+            <th>Intake</th>
+            <th>Filled</th>
+            <th>Vacant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% const collegeDataFiltered = collegeData.filter(data => data.college
+          === college_key); collegeDataFiltered.forEach(function(data) { %>
+          <tr>
+            <td><%= names.branch[data.branch] %></td>
+            <td><%= data.nri_intake %></td>
+            <td><%= data.nri_filled %></td>
+            <td><%= data.nri_vacant %></td>
+            <td><%= data.oci_intake %></td>
+            <td><%= data.oci_filled %></td>
+            <td><%= data.oci_vacant %></td>
+            <td><%= data.fn_intake %></td>
+            <td><%= data.fn_filled %></td>
+            <td><%= data.fn_vacant %></td>
+            <td><%= data.pio_intake %></td>
+            <td><%= data.pio_filled %></td>
+            <td><%= data.pio_vacant %></td>
+            <td><%= data.ciwgc_intake %></td>
+            <td><%= data.ciwgc_filled %></td>
+            <td><%= data.ciwgc_vacant %></td>
+            <td><%= data.total_intake %></td>
+            <td><%= data.total_filled %></td>
+            <td><%= data.total_vacant %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <button class="btn btn-info me-md-2 downloadCSV">Get CSV file</button>
+        <button class="btn btn-primary printData">Print Data</button>
+
+        <a href="/" class="btn btn-success">Home</a>
+      </div>
+    </div>
+    <% } %> <%- include("partials/footer.ejs") %>
+
+    <script>
+      document
+        .getElementById("getReportBtn")
+        .addEventListener("click", function () {
+          const college = document.getElementById("college").value;
+          // Hide all tables
+          document.querySelectorAll('div[id$="-table"]').forEach((tableDiv) => {
+            tableDiv.style.display = "none";
+          });
+          // Show selected table
+          const selectedTable = document.getElementById(college + "-table");
+          if (selectedTable) {
+            selectedTable.style.display = "block";
+          }
+        });
+
+      // Function to download CSV
+      const downloadCSVButtons = document.querySelectorAll(".downloadCSV");
+      downloadCSVButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const table = button.parentElement.previousElementSibling;
+          const csvContent = [];
+
+          // Extract table caption
+          const captionText = table
+            .querySelector("caption")
+            ?.textContent.trim();
+          if (captionText) {
+            csvContent.push(`"${captionText}"`); // Add caption without a comma
+          }
+
+          // Iterate over table rows
+          table.querySelectorAll("tr").forEach((row, index) => {
+            const rowData = [];
+            let cellIndex = 0;
+            row.querySelectorAll("th, td").forEach((cell) => {
+              // Handle colspan
+              const colspan = parseInt(cell.getAttribute("colspan")) || 1;
+              const cellText = cell.textContent.trim();
+              for (let i = 0; i < colspan; i++) {
+                rowData.push(i === 0 ? cellText : ""); // Insert cell text for the first cell only
+              }
+              cellIndex += colspan;
+            });
+            csvContent.push(rowData.join(","));
+          });
+
+          // Convert CSV content to text
+          const csvText = csvContent.join("\n");
+
+          // Create Blob and download link
+          const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+          const link = document.createElement("a");
+          if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "data.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            alert(
+              "Your browser does not support downloading files. Please try again in a different browser."
+            );
+          }
+        });
+      });
+
+      // Function to print table data
+      const printDataButtons = document.querySelectorAll(".printData");
+      printDataButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const table = button.parentElement.previousElementSibling;
+
+          var printContents = table.outerHTML;
+
+          var htmlToPrint = `<style type="text/css">
+          table {
+            border-collapse: collapse;
+          }
+          th,
+          td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            word-wrap: break-word;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+          caption {
+            caption-side: top;
+            text-align: center;
+            font-size: 1.2em; /* Adjust font size as needed */
+            margin-bottom: 10px; /* Adjust margin as needed */
+          }
+          </style>`;
+
+          htmlToPrint += printContents;
+
+          newWin = window.open("");
+          newWin.document.write(htmlToPrint);
+          newWin.focus();
+          newWin.print();
+          newWin.close();
+        });
+      });
+    </script>
+  </body>
+</html>

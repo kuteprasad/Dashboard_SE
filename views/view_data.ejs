@@ -16,6 +16,7 @@
               name="college"
               aria-label="Select College"
             >
+              <option disabled>Select College</option>
               <option selected value="all">All</option>
               <option value="vit">VIT</option>
               <option value="viit">VIIT</option>
@@ -31,6 +32,7 @@
               name="branch"
               aria-label="Select Branch"
             >
+              <option disabled>Select Branch</option>
               <option selected value="all">All</option>
               <option value="cse">Computer Science (CSE)</option>
               <option value="it">Information Technology (IT)</option>
@@ -59,6 +61,7 @@
               name="seat_type"
               aria-label="Select Seat Type"
             >
+              <option disabled>Select seat Type</option>
               <option selected value="all">All</option>
               <option value="NRI">NRI</option>
               <option value="OCI">OCI</option>
@@ -73,7 +76,7 @@
           </button>
 
           <a href="/" class="btn btn-success"> Home</a>
-          <a href="/view_data" class="btn btn-warning"> Clear All</a>
+          <a href="/view_data" class="btn btn-danger"> Clear All</a>
         </form>
       </div>
     </div>
@@ -96,8 +99,8 @@
           <%data.response.forEach(function(row, index) { %>
           <tr>
             <td><%= index + 1 %></td>
-            <td><%= row.college %></td>
-            <td><%= row.branch %></td>
+            <td><%= data.names.college[row.college] %></td>
+            <td><%= data.names.branch[row.branch] %></td>
             <td><%= row.seat_type %></td>
             <td><%= row.intake %></td>
             <td><%= row.filled %></td>

@@ -34,6 +34,35 @@ footer {
   width: 100%;
 }
 
+caption {
+  caption-side: top;
+  text-align: center;
+  font-size: 1.2em; /* Adjust font size as needed */
+  margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+.flex-center {
+  display: flex;
+  flex: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* Ensure proper table borders */
+/* @media print {
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          border: 1px solid #000;
+        }
+
+        th,
+        td {
+          border: 1px solid #000;
+        } */
+/* } */
+
 /* Small Screens (most smartphones) */
 @media only screen and (575px < width <= 768px) {
 }
