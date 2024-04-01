@@ -5,7 +5,7 @@
     <%- include("partials/header.ejs") %> <% for (let college_key of ['viit',
     'vit', 'vu']) { %>
 
-    <table cellpadding="5px">
+    <table>
       <caption>
         <h2><%= names.college[college_key] %></h2>
       </caption>
@@ -20,6 +20,7 @@
           <th colspan="3">Total</th>
         </tr>
         <tr>
+          <th hidden></th>
           <th>Total</th>
           <th>Filled</th>
           <th>Vacant</th>
@@ -67,7 +68,6 @@
         <% }); %>
       </tbody>
     </table>
-
     <div>
       <button class="btn btn-info downloadCSV">Get CSV file</button>
       <button class="btn btn-primary printData">Print Data</button>
@@ -87,17 +87,42 @@
       downloadCSVButtons.forEach((button) => {
         button.addEventListener("click", function () {
           const table = button.parentElement.previousElementSibling;
-          const rows = Array.from(table.querySelectorAll("tr"));
-          const csvContent = rows
-            .map((row) =>
-              Array.from(row.querySelectorAll("th, td"))
-                .map((cell) => cell.textContent)
-                .join(",")
-            )
-            .join("\n");
-          const blob = new Blob([csvContent], {
-            type: "text/csv;charset=utf-8;",
+          const csvContent = [];
+
+          // Extract table caption
+          const captionText = table
+            .querySelector("caption")
+            ?.textContent.trim();
+          if (captionText) {
+            csvContent.push(`"${captionText}"`); // Add caption without a comma
+          }
+
+          // Iterate over table rows
+
+          table.querySelectorAll("tr").forEach((row, index) => {
+            const rowData = [];
+            // if (index == 1) {
+            //   // Insert an empty cell before the second row
+            //   rowData.push(",");
+            // }
+            let cellIndex = 0;
+            row.querySelectorAll("th, td").forEach((cell) => {
+              // Handle colspan
+              const colspan = parseInt(cell.getAttribute("colspan")) || 1;
+              const cellText = cell.textContent.trim();
+              for (let i = 0; i < colspan; i++) {
+                rowData.push(i === 0 ? cellText : ""); // Insert cell text for the first cell only
+              }
+              cellIndex += colspan;
+            });
+            csvContent.push(rowData.join(","));
           });
+
+          // Convert CSV content to text
+          const csvText = csvContent.join("\n");
+
+          // Create Blob and download link
+          const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
           const link = document.createElement("a");
           if (link.download !== undefined) {
             const url = URL.createObjectURL(blob);
@@ -119,35 +144,42 @@
       printDataButtons.forEach((button) => {
         button.addEventListener("click", function () {
           const table = button.parentElement.previousElementSibling;
-          const printWindow = window.open("", "_blank");
-          printWindow.document.write(
-            "<html><head><title>Print</title></head><body>"
-          );
-          //       printWindow.document.write(table.outerHTML);
-          //       printWindow.document.write("</body></html>");
-          //       printWindow.document.close();
-          //       printWindow.print();
-          //     });
-          //   });
 
-          // Function to print table data
-          //   const printDataButtons = document.querySelectorAll(".printData");
-          //   printDataButtons.forEach((button) => {
-          // button.addEventListener("click", function () {
-          //   const table = button.parentElement.previousElementSibling;
-          //   const printWindow = window.open("", "_blank");
-          //   printWindow.document.write(
-          // "<html><head><title>Print</title><style>@media print { table { border-collapse: collapse; width: 100%; border: 1px solid #000; } th, td { border: 1px solid #000; } }</style>"
-          //   );
-          //   printWindow.document.write(table.querySelector("caption").innerHTML);
-          printWindow.document.write(table.outerHTML);
-          printWindow.document.write("</body></html>");
-          printWindow.document.close();
-          //   printWindow.focus();
-          // Focus on the new window
-          printWindow.print();
-          //   printWindow.close();
-          // Close the new window after printing
+          var printContents = table.outerHTML;
+
+          var htmlToPrint = `<style type="text/css">
+         
+table {
+  border-collapse: collapse;
+ 
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+   word-wrap: break-word;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+caption {
+  caption-side: top;
+  text-align: center;
+  font-size: 1.2em; /* Adjust font size as needed */
+  margin-bottom: 10px; /* Adjust margin as needed */
+}
+    </style>`;
+
+          htmlToPrint += printContents;
+
+          newWin = window.open("");
+          newWin.document.write(htmlToPrint);
+          newWin.focus();
+          newWin.print();
+          newWin.close();
         });
       });
     </script>
