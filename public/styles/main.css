@@ -34,9 +34,9 @@ footer {
   width: 100%;
 }
 
-table {
+.table {
   border-collapse: collapse;
-  width: 80%;
+  width: 90%;
 }
 
 th,
@@ -54,6 +54,13 @@ caption {
   text-align: center;
   font-size: 1.2em; /* Adjust font size as needed */
   margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
 }
 
 /* Ensure proper table borders */
