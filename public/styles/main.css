@@ -34,9 +34,14 @@ footer {
   width: 100%;
 }
 
+table {
+  border-collapse: collapse;
+  width: 80%;
+}
+
 .table {
   border-collapse: collapse;
-  width: 90%;
+  width: 80%;
 }
 
 th,
@@ -58,6 +63,7 @@ caption {
 
 .flex-center {
   display: flex;
+  flex: column nowrap;
   justify-content: center;
   align-items: center;
   gap: 3rem;
