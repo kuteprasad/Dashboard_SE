@@ -283,7 +283,27 @@ ORDER BY
   }
 });
 
-app.post("/report", (req, res) => {});
+app.post("/report", (req, res) => { });
+
+
+
+//display student_data
+
+// Route handler for /student_data
+app.get("/student_details", async (req, res) => {
+  try {
+    // Fetch data from the student_details table
+    const result = await db.query("SELECT * FROM student_details");
+
+    // Pass the fetched data to the student_data.ejs template
+    res.render("student_details", { students: result.rows });
+  } catch (error) {
+    console.error("Error fetching student data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;
