@@ -20,17 +20,6 @@ CREATE TABLE accounts (
     CONSTRAINT email_unique UNIQUE (email)
 );
 
-    CREATE TABLE IF NOT EXISTS accounts (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    mobile_no VARCHAR(15),
-    email VARCHAR(255) UNIQUE,
-    account_type VARCHAR(10),
-    password_salt VARCHAR(255),
-    password_hash VARCHAR(255)
-    );
 
 SELECT 
     college,

@@ -3,7 +3,7 @@ import passport from "passport";
 import GoogleStrategy from "passport-google-oauth2";
 import session from "express-session";
 import dotenv from "dotenv";
-import { verify_email_DB } from "./db_functions.js";
+import { verify_email_DB, ensureAuthenticated } from "./db_functions.js";
 
 dotenv.config({ path: "./config/.env" });
 
@@ -16,7 +16,7 @@ router.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: 1000 * 60 * 60 * 24 * 30,
     },
   })
 );
@@ -35,9 +35,27 @@ passport.use(
       callbackURL: "http://localhost:3000/auth/google/main",
       userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     },
-    (accessToken, refreshToken, profile, done) => {
-      // This is where you would typically save the user to a database
-      return done(null, profile);
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Access user information from profile
+        const email = profile.email;
+        const profile_pic = profile.picture;
+
+        // Call verify_email_DB asynchronously
+        const user_type = await verify_email_DB(email, profile_pic);
+
+        // If type is verified, pass user information to Passport
+        if (user_type) {
+          // Pass user information to Passport via done callback
+          done(null, { email, profile_pic, user_type });
+        } else {
+          // If type is not verified, pass false to indicate failure
+          done(null, false);
+        }
+      } catch (error) {
+        // Handle errors
+        done(error);
+      }
     }
   )
 );
@@ -62,32 +80,40 @@ router.get(
 router.get(
   "/auth/google/main",
   passport.authenticate("google", {
-    successRedirect: "/main",
+    successRedirect: "/",
     failureRedirect: "/login",
   })
 );
 
-// Profile route after successful authentication
-router.get("/main", async (req, res) => {
-  //   console.log(req.user);
+router.get("/", (req, res) => {
+  // Default route handler logic
   if (req.isAuthenticated()) {
-    let email = req.user.email;
-    let picture = req.user.picture;
-
-    let type = await verify_email_DB(email, picture);
-    // console.log(type);
-    if (type) {
-      res.render("index.ejs", { type: type, profile_pic: picture });
-    } else {
-      res.render("login.ejs", { error: "Not authenticated person" });
-    }
+    res.render("index.ejs", {
+      user_type: req.user.user_type,
+      profile_pic: req.user.profile_pic,
+    });
   } else {
-    res.render("login.ejs");
+    res.render("profile/login.ejs");
   }
 });
 
 router.get("/login", (req, res) => {
-  res.render("login.ejs");
+  if (req.isAuthenticated()) {
+    res.render("profile/profile.ejs");
+  } else {
+    res.render("profile/login.ejs", { error: "Not authenticated person" });
+  }
+});
+
+router.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.log(err);
+      // Handle the error if needed
+    }
+    // Redirect the user to the login page after logout
+    res.redirect("/login");
+  });
 });
 
 export default router;

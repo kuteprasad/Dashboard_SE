@@ -1,34 +1,11 @@
 import express from "express";
 import { db } from "./db.js";
+import { names } from "./data.js";
+import { ensureAuthenticated } from "./db_functions.js";
 
 const router = express.Router();
 
-const names = {
-  college: {
-    vit: "Vishwakarma Institute of Technology",
-    viit: "Vishwakarma Institute of Information Technology",
-    vu: "Vishwakarma University",
-  },
-  branch: {
-    cse: "Computer Science and Engineering",
-    it: "Information Technology",
-    aids: "Artificial Intelligence and Data Science",
-    ai: "Artificial Intelligence",
-    aiml: "Artificial Intelligence and Machine Learning",
-    civil: "Civil Engineering",
-    mech: "Mechanical Engineering",
-    entc: "Electronics and Telecommunication Engineering",
-    ds: "Data Science",
-    iot: "Internet of Things",
-  },
-};
-
-router.get("/", (req, res) => {
-  // Default route handler logic
-  res.render("login.ejs");
-});
-
-router.get("/view_data", async (req, res) => {
+router.get("/view_data", ensureAuthenticated, async (req, res) => {
   try {
     const data = {
       local: false,
@@ -40,7 +17,7 @@ router.get("/view_data", async (req, res) => {
   }
 });
 
-router.post("/view_data", async (req, res) => {
+router.post("/view_data", ensureAuthenticated, async (req, res) => {
   try {
     const { college, branch, seat_type } = req.body;
 
@@ -71,6 +48,52 @@ router.post("/view_data", async (req, res) => {
     console.error(error);
     res.status(500).send("Internal server error");
   }
+});
+
+router.get("/report", ensureAuthenticated, async (req, res) => {
+  try {
+    const query = `SELECT 
+        college,
+        branch,
+        SUM(CASE WHEN seat_type = 'NRI' THEN intake ELSE 0 END) AS nri_intake,
+        SUM(CASE WHEN seat_type = 'NRI' THEN filled ELSE 0 END) AS nri_filled,
+        SUM(CASE WHEN seat_type = 'NRI' THEN vacant ELSE 0 END) AS nri_vacant,
+        SUM(CASE WHEN seat_type = 'OCI' THEN intake ELSE 0 END) AS oci_intake,
+        SUM(CASE WHEN seat_type = 'OCI' THEN filled ELSE 0 END) AS oci_filled,
+        SUM(CASE WHEN seat_type = 'OCI' THEN vacant ELSE 0 END) AS oci_vacant,
+        SUM(CASE WHEN seat_type = 'FN' THEN intake ELSE 0 END) AS fn_intake,
+        SUM(CASE WHEN seat_type = 'FN' THEN filled ELSE 0 END) AS fn_filled,
+        SUM(CASE WHEN seat_type = 'FN' THEN vacant ELSE 0 END) AS fn_vacant,
+        SUM(CASE WHEN seat_type = 'PIO' THEN intake ELSE 0 END) AS pio_intake,
+        SUM(CASE WHEN seat_type = 'PIO' THEN filled ELSE 0 END) AS pio_filled,
+        SUM(CASE WHEN seat_type = 'PIO' THEN vacant ELSE 0 END) AS pio_vacant,
+        SUM(CASE WHEN seat_type = 'CIWGC' THEN intake ELSE 0 END) AS ciwgc_intake,
+        SUM(CASE WHEN seat_type = 'CIWGC' THEN filled ELSE 0 END) AS ciwgc_filled,
+        SUM(CASE WHEN seat_type = 'CIWGC' THEN vacant ELSE 0 END) AS ciwgc_vacant,
+        SUM(intake) AS total_intake,
+        SUM(filled) AS total_filled,
+        SUM(vacant) AS total_vacant
+        FROM 
+        seat_data
+        GROUP BY 
+        college, branch
+        ORDER BY 
+        college ASC, branch ASC; `;
+
+    const response = await db.query(query);
+    // console.log(response.rows);
+
+    res.render("report.ejs", {
+      collegeData: response.rows,
+      names: names,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/report", ensureAuthenticated, (req, res) => {
+  res.send("route not defined!");
 });
 
 export default router;

@@ -1,15 +1,11 @@
 import express from "express";
 import bodyParser from "body-parser"; // Add this line for bodyParser import express from "express";
 import { db } from "./db.js"; // Corrected import path
+import { ensureAuthenticated } from "./db_functions.js";
 
 const router = express.Router();
 
-router.get("/pg_version", async (req, res) => {
-  // Route handler logic for fetching PostgreSQL version
-  res.render("index.ejs");
-});
-
-router.get("/report", async (req, res) => {
+router.get("/pg_version", ensureAuthenticated, async (req, res) => {
   // Route handler logic for generating report
   try {
     // Fetch PostgreSQL version
