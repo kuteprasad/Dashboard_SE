@@ -9,6 +9,17 @@ CREATE TABLE IF NOT EXISTS seat_data (
 	UNIQUE (college, branch, seat_type)
 );
 
+CREATE TABLE accounts (
+    id SERIAL PRIMARY KEY,
+    user_type VARCHAR(50) NOT NULL CHECK (user_type IN ('admin', 'guest', 'user')),
+	email VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    profile_pic TEXT,
+    CONSTRAINT email_unique UNIQUE (email)
+);
+
     CREATE TABLE IF NOT EXISTS accounts (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,

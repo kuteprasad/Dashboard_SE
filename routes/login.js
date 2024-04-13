@@ -3,6 +3,7 @@ import passport from "passport";
 import GoogleStrategy from "passport-google-oauth2";
 import session from "express-session";
 import dotenv from "dotenv";
+import { verify_email_DB } from "./db_functions.js";
 
 dotenv.config({ path: "./config/.env" });
 
@@ -67,8 +68,26 @@ router.get(
 );
 
 // Profile route after successful authentication
-router.get("/main", (req, res) => {
-  res.send(req.user.email);
+router.get("/main", async (req, res) => {
+  //   console.log(req.user);
+  if (req.isAuthenticated()) {
+    let email = req.user.email;
+    let picture = req.user.picture;
+
+    let type = await verify_email_DB(email, picture);
+    // console.log(type);
+    if (type) {
+      res.render("index.ejs", { type: type, profile_pic: picture });
+    } else {
+      res.render("login.ejs", { error: "Not authenticated person" });
+    }
+  } else {
+    res.render("login.ejs");
+  }
+});
+
+router.get("/login", (req, res) => {
+  res.render("login.ejs");
 });
 
 export default router;

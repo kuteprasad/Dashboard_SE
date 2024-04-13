@@ -4,6 +4,34 @@
   <body>
     <%- include("partials/header.ejs") %>
 
+    <% if (type == 'admin') { %>
+
+      <div>
+        <p>
+          You are Admin!
+        </p>
+      </div>
+     
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Add Admin Page here</h5>
+            <p class="card-text">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            </p>
+            <a href="#" class="btn btn-success">Empty</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } else { %>
+      <div>
+        <p>
+          You are User!
+        </p>
+      </div>
+    <% }  %>
+
     <div class="container text-center">
       <div class="row row-cols-2">
         <div class="col">

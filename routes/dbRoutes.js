@@ -2,11 +2,7 @@ import express from "express";
 import bodyParser from "body-parser"; // Add this line for bodyParser import express from "express";
 import { db } from "./db.js"; // Corrected import path
 
-
 const router = express.Router();
-
-
-
 
 router.get("/pg_version", async (req, res) => {
   // Route handler logic for fetching PostgreSQL version
