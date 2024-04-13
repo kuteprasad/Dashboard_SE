@@ -2,6 +2,7 @@
 import express, { query } from "express";
 import bodyParser from "body-parser";
 
+import loginRouter from "./routes/login.js";
 import { db } from "./routes/db.js"; // Import sql from db.js
 
 // Create an Express app instance
@@ -9,9 +10,11 @@ const app = express();
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-
 // Set EJS as the view engine
 app.set("view engine", "ejs");
+
+// Use the login router
+app.use("/", loginRouter);
 
 //-------------------------- Declarations --------------------------
 
@@ -41,6 +44,10 @@ const names = {
 app.get("/", (req, res) => {
   // res.send("Welcome to my Express.js app!");
   res.render("index.ejs");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
 });
 
 app.get("/pg_version", async (req, res) => {
@@ -283,9 +290,7 @@ ORDER BY
   }
 });
 
-app.post("/report", (req, res) => { });
-
-
+app.post("/report", (req, res) => {});
 
 //display student_data
 
@@ -302,8 +307,6 @@ app.get("/student_details", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;
